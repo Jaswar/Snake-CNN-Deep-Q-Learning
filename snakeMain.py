@@ -41,7 +41,7 @@ negativeReward = -1     #the reward for hitting itself or wall
 positiveReward = 2      #the reward for eating an apple
 
 train = True            #if we want to train our model then we set it to True if we want to test a pretrained model we set it to False
-filepathToOpen = 'snakeBrain.h5'   #filepath to open our pretrained model
+filepathToOpen = 'snakeModel10x10.h5'   #filepath to open our pretrained model
 filepathToSave = 'snakeBrainTest.h5'    #filepath to save our model
 
 nRows = int(HEIGHT/rowSize)
