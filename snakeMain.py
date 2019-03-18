@@ -14,34 +14,35 @@ from keras.layers import Dense, Dropout, Conv2D, MaxPooling2D, Flatten
 from keras.optimizers import Adam
 import matplotlib.pyplot as plt
 
-WIDTH = 800
-HEIGHT = 800
-BLACK = (0,0,0)
-SNAKE = (255,255,255)
-BALL = (255,0,0)
-HEAD = (255,255,0)
-rowSize = 80
-columnSize = 80
-numChannels = 4
+WIDTH = 800             #width of game screen
+HEIGHT = 800            #height of game screen
+BLACK = (0,0,0)         #background color
+SNAKE = (255,255,255)   #snake color
+BALL = (255,0,0)        #ball color
+HEAD = (255,255,0)      #head color (not used in default version)
+rowSize = 80            #size of each row in the game
+columnSize = 80         #size of each column in the game
+numChannels = 4         #how many subsequent images are stacked so that AI can see game continuity
 
-snakeLength = 2
+snakeLength = 2         #initial length of snake
 
-epsilon = 1
-epsilonDecayRate = 0.0002
-minEpsilon = 0.001
+epsilon = 1.            #initial epsilon ie. exploration rate
+epsilonDecayRate = 0.0002   #by how much we decrease epsilon each epoch
+minEpsilon = 0.001      #minimum of epsiol
 
-nbEpoch = 300000
-learningRate = 0.0001
-memSize = 60000
-gamma = 0.9
-batchSize = 32
+nbEpoch = 300000        #on how many epochs model is trained on
+learningRate = 0.0001   #learning rate of the model
+memSize = 60000         #Deep Q Learning memory size
+gamma = 0.9             #gamma parameter which defines by how much next state influences previous state
+batchSize = 32          #size of batch neural network is trained on every iteration (every move) 
 
-defaultReward = -0.1
-negativeReward = -1
-positiveReward =2
+defaultReward = -0.1    #the default reward for every action
+negativeReward = -1     #the reward for hitting itself or wall
+positiveReward = 2      #the reward for eating an apple
 
-train = True
-
+train = True            #if we want to train our model then we set it to True if we want to test a pretrained model we set it to False
+filepathToOpen = 'snakeBrain.h5'   #filepath to open our pretrained model
+filepathToSave = 'snakeBrainTest.h5'    #filepath to save our model
 
 nRows = int(HEIGHT/rowSize)
 nColumns = int(WIDTH/columnSize)
@@ -199,7 +200,7 @@ start = True
 snake = Snake((nRows, nColumns, numChannels), 4, learningRate)
 model = snake.model
 if not train:
-    model = snake.loadModel('snakeBrain.h5')
+    model = snake.loadModel(filepathToOpen)
 reward = 0.0
 nActions = 0
 dqn = DQN.DQN(memSize, gamma)
@@ -292,7 +293,7 @@ for epoch in range(nbEpoch):
         dqn.remember([currentState, action - 1, reward, nextState], gameOver)
         if score > highScore and train: 
             highScore = score
-            model.save('snakeBrain2.h5')
+            model.save(filepathToSave)
             
         lastMove = direction
         currentState = np.copy(nextState)
